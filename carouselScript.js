@@ -13,96 +13,66 @@ let position = 0;
 let activeIndex = 2;
 let activeContainer = carouselContainer.children[activeIndex];
 activeContainer.classList.add("active");
+let prevPosition = carouselContainer.scrollTop
 
 const buttonUpClick = () => {
-  console.log(position);
 
-  /*if (activeIndex > 1 && activeIndex < 7) {
-    position += (containerHeight + 10) / 10
-    if (activeIndex <= 2) {
-      position = ((containerHeight + 10) / 10) * (activeIndex - 2)
-    }
+  if (activeIndex > 7) {
+    activeContainer.classList.remove("active");
+    activeIndex -= 1;
+    activeContainer = carouselContainer.children[activeIndex];
+    activeContainer.classList.add("active");
+  } else {
+    carouselMainContainer.scrollTop -= perContainerHeight;
   }
-  if (activeIndex > 1) {
-    if (position > 0) {
-      position = ((containerHeight + 10) / 10) * (activeIndex - 2)
-    }
-    console.log(position)
-    carouselContainer.style.transform = `translateY(${position}px)`
-  }*/
-
-  if (activeIndex > 0) {
+  
+  if (carouselMainContainer.scrollTop < (perContainerHeight * 2) && activeIndex > 0) {
     activeContainer.classList.remove("active");
     activeIndex -= 1;
     activeContainer = carouselContainer.children[activeIndex];
     activeContainer.classList.add("active");
   }
-
-  if (activeIndex > 1 && activeIndex < 8) {
-    position = ((containerHeight + 10) / 10) * (activeIndex - 2);
-  }
-
-  carouselContainer.style.transform = `translateY(${-position}px)`;
 };
 
 const buttonDownClick = () => {
-  console.log(activeIndex);
-
-  /*if (activeIndex < 7 && activeIndex > 1) {
-    position -= (containerHeight + 10) / 10
-    if (activeIndex >= 8) {
-      position = ((containerHeight + 10) / 10) * (activeIndex - 2)
-    }
+ 
+  
+  if (activeIndex < 2) {
+    activeContainer.classList.remove("active");
+    activeIndex += 1;
+    activeContainer = carouselContainer.children[activeIndex];
+    activeContainer.classList.add("active");
+  } else if (activeIndex < 7) {
+    carouselMainContainer.scrollTop += perContainerHeight;
   }
-  if (activeIndex < 8) {
-    if (position < -containerHeight) {
-      position = ((containerHeight + 10) / 10) * (activeIndex - 2)
-    }
-    carouselContainer.style.transform = `translateY(${position}px)`
-  }*/
-
-  if (activeIndex < 9) {
+  if (carouselMainContainer.scrollTop > (carouselMainContainerHeight - (perContainerHeight * 2)) && activeIndex < 9) {
+    console.log('down')
     activeContainer.classList.remove("active");
     activeIndex += 1;
     activeContainer = carouselContainer.children[activeIndex];
     activeContainer.classList.add("active");
   }
-
-  if (activeIndex > 1 && activeIndex < 8) {
-    position = ((containerHeight + 10) / 10) * (activeIndex - 2);
-  }
-
-  console.log(position);
-  carouselContainer.style.transform = `translateY(${-position}px)`;
 };
 
 const itemClick = (selected) => {
-  for (let v = 0; v < cards.length; v++) {
-    cards[v].classList.remove("active");
-  }
-
-  selected.classList.add("active");
-  activeContainer = selected;
-  activeIndex = Array.prototype.indexOf.call(
-    carouselContainer.children,
-    selected
-  );
-  console.log(activeIndex);
-
-  if (activeIndex < 3) {
-    position = ((containerHeight + 10) / 10) * 0;
-    console.log("less3", position);
-  } else if (activeIndex > 7) {
-    position = ((containerHeight + 10) / 10) * 5;
-    console.log("greater7", position);
+  activeContainer.classList.remove("active");
+  activeIndex = Array.prototype.indexOf.call(carouselContainer.children, selected);
+  if (activeIndex >= 1) {
+    carouselMainContainer.scrollTop = perContainerHeight * (activeIndex - 2);
+    activeContainer = carouselContainer.children[activeIndex];
+    activeContainer.classList.add("active");
+  } else if (activeIndex <= 8) {
+    carouselMainContainer.scrollTop = perContainerHeight * (activeIndex - 7);
+    activeContainer = carouselContainer.children[activeIndex];
+    activeContainer.classList.add("active");
   } else {
-    console.log("nasa else");
-    position = ((containerHeight + 10) / 10) * (activeIndex - 2);
+    activeContainer = carouselContainer.children[activeIndex];
+    activeContainer.classList.add("active");
   }
-  carouselContainer.style.transform = `translateY(${-position}px)`;
+  
 };
 
-let prevPosition = carouselContainer.scrollTop
+
 
 const carouselScroll = (element) => {
   const currentPosition = element.scrollTop
@@ -110,10 +80,10 @@ const carouselScroll = (element) => {
   if (currentPosition > prevPosition) {
     
     if (currentPosition > (perContainerHeight * (activeIndex - 1)) - (perContainerHeight / 2)) {
-      console.log("scroll up")
+      console.log("scroll up", currentPosition);
       activeContainer.classList.remove("active");
       activeIndex += 1;
-      if (currentPosition < carouselMainContainerHeight - 10) {
+      if (currentPosition < carouselMainContainerHeight - 50) {
         activeContainer = carouselContainer.children[activeIndex];
         activeContainer.classList.add("active");
       } else {
@@ -124,10 +94,11 @@ const carouselScroll = (element) => {
   }
   if (currentPosition < prevPosition) {
       if (currentPosition < (perContainerHeight * (activeIndex - 2)) - (perContainerHeight / 2)) {
-      console.log("scroll down")
-      activeContainer.classList.remove("active");
-        activeIndex -= 1;
-        if (currentPosition > 10) {
+        console.log("scroll down", currentPosition, (perContainerHeight * (activeIndex - 2)) - (perContainerHeight / 2));
+      
+        if (currentPosition < carouselMainContainerHeight) {
+          activeContainer.classList.remove("active");
+          activeIndex -= 1;
           activeContainer = carouselContainer.children[activeIndex];
           activeContainer.classList.add("active");
         } else {

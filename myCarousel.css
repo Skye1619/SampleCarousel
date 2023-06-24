@@ -6,6 +6,7 @@
   /* For Firefox */
 scrollbar-width: thin;
 scrollbar-color: transparent transparent;
+scroll-behavior: smooth;
 }
 
 /* For Webkit browsers (e.g., Chrome, Safari) */
@@ -74,8 +75,8 @@ img {
   justify-content: center;
   align-items: center;
   padding: 0 100px;
-  border: 1px solid black;
   transition: all 0.3s ease-out;
+ 
 }
 
 .carouselMainContainer {
