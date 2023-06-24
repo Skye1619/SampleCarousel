@@ -42,7 +42,7 @@ const buttonDownClick = () => {
     activeIndex += 1;
     activeContainer = carouselContainer.children[activeIndex];
     activeContainer.classList.add("active");
-  } else if (activeIndex < 7) {
+  } else {
     carouselMainContainer.scrollTop += perContainerHeight;
   }
   if (carouselMainContainer.scrollTop > (carouselMainContainerHeight - (perContainerHeight * 2)) && activeIndex < 9) {
