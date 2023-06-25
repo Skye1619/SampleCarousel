@@ -9,14 +9,14 @@ const containerHeight = carouselContainer.offsetHeight;
 const carouselMainContainerHeight = (containerHeight + 10) / 2;
 const perContainerHeight = (containerHeight + 10) / 10;
 carouselMainContainer.style.height = carouselMainContainerHeight + "px";
+carouselContainer.style.height = (containerHeight + 10) + "px";
 let position = 0;
 let activeIndex = 2;
 let activeContainer = carouselContainer.children[activeIndex];
 activeContainer.classList.add("active");
-let prevPosition = carouselContainer.scrollTop
+let prevPosition = carouselContainer.scrollTop;
 
 const buttonUpClick = () => {
-
   if (activeIndex > 7) {
     activeContainer.classList.remove("active");
     activeIndex -= 1;
@@ -25,8 +25,11 @@ const buttonUpClick = () => {
   } else {
     carouselMainContainer.scrollTop -= perContainerHeight;
   }
-  
-  if (carouselMainContainer.scrollTop < (perContainerHeight * 2) && activeIndex > 0) {
+
+  if (
+    carouselMainContainer.scrollTop < perContainerHeight * 2 &&
+    activeIndex > 0
+  ) {
     activeContainer.classList.remove("active");
     activeIndex -= 1;
     activeContainer = carouselContainer.children[activeIndex];
@@ -35,8 +38,6 @@ const buttonUpClick = () => {
 };
 
 const buttonDownClick = () => {
- 
-  
   if (activeIndex < 2) {
     activeContainer.classList.remove("active");
     activeIndex += 1;
@@ -45,8 +46,12 @@ const buttonDownClick = () => {
   } else {
     carouselMainContainer.scrollTop += perContainerHeight;
   }
-  if (carouselMainContainer.scrollTop > (carouselMainContainerHeight - (perContainerHeight * 2)) && activeIndex < 9) {
-    console.log('down')
+  if (
+    carouselMainContainer.scrollTop >
+      carouselMainContainerHeight - perContainerHeight * 2 &&
+    activeIndex < 9
+  ) {
+    console.log("down");
     activeContainer.classList.remove("active");
     activeIndex += 1;
     activeContainer = carouselContainer.children[activeIndex];
@@ -56,7 +61,10 @@ const buttonDownClick = () => {
 
 const itemClick = (selected) => {
   activeContainer.classList.remove("active");
-  activeIndex = Array.prototype.indexOf.call(carouselContainer.children, selected);
+  activeIndex = Array.prototype.indexOf.call(
+    carouselContainer.children,
+    selected
+  );
   if (activeIndex >= 1) {
     carouselMainContainer.scrollTop = perContainerHeight * (activeIndex - 2);
     activeContainer = carouselContainer.children[activeIndex];
@@ -69,46 +77,41 @@ const itemClick = (selected) => {
     activeContainer = carouselContainer.children[activeIndex];
     activeContainer.classList.add("active");
   }
-  
 };
 
-
-
-const carouselScroll = (element) => {
-  const currentPosition = element.scrollTop
+const carouselScroll = (element, event) => {
+  const currentPosition = element.scrollTop;
 
   if (currentPosition > prevPosition) {
-    
-    if (currentPosition > (perContainerHeight * (activeIndex - 1)) - (perContainerHeight / 2)) {
-      console.log("scroll up", currentPosition);
-      activeContainer.classList.remove("active");
+    console.log("scroll up", currentPosition);
+
+    if (currentPosition > (perContainerHeight * (activeIndex - 2)) + (perContainerHeight / 2)) {
       activeIndex += 1;
-      if (currentPosition < carouselMainContainerHeight - 50) {
-        activeContainer = carouselContainer.children[activeIndex];
-        activeContainer.classList.add("active");
-      } else {
-        activeContainer = carouselContainer.children[activeIndex];
-        activeContainer.classList.add("active");
-      }
+      activeContainer.classList.remove("active");
+      activeContainer = carouselContainer.children[activeIndex];
+      activeContainer.classList.add("active");
     }
   }
+
+
   if (currentPosition < prevPosition) {
-      if (currentPosition < (perContainerHeight * (activeIndex - 2)) - (perContainerHeight / 2)) {
-        console.log("scroll down", currentPosition, (perContainerHeight * (activeIndex - 2)) - (perContainerHeight / 2));
-      
-        if (currentPosition < carouselMainContainerHeight) {
-          activeContainer.classList.remove("active");
-          activeIndex -= 1;
-          activeContainer = carouselContainer.children[activeIndex];
-          activeContainer.classList.add("active");
-        } else {
-          activeContainer = carouselContainer.children[activeIndex];
+    console.log("scroll down", currentPosition);
+
+    if (currentPosition < (perContainerHeight * (activeIndex - 2)) - (perContainerHeight / 2)) {
+      if (currentPosition < (carouselMainContainerHeight - (perContainerHeight))) {
+        activeIndex -= 1;
+        activeContainer.classList.remove("active");
+        activeContainer = carouselContainer.children[activeIndex];
         activeContainer.classList.add("active");
-        }
-        
+      } else if (activeIndex < 8) {
+        activeIndex -= 1;
       }
+      activeContainer.classList.remove("active");
+      activeContainer = carouselContainer.children[activeIndex];
+      activeContainer.classList.add("active");
     }
-  
-  
-  prevPosition = currentPosition
-}
+    
+  }
+
+  prevPosition = currentPosition;
+};
